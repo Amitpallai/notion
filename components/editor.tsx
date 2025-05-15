@@ -11,10 +11,9 @@ import "@blocknote/mantine/style.css";
 interface EditorProps {
   onChange: (value: string) => void;
   initialContent?: string;
-  editable?: boolean;
 }
 
-const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
+const Editor = ({ onChange, initialContent }: EditorProps) => {
   const { resolvedTheme } = useTheme();
 
   const { edgestore } = useEdgeStore();

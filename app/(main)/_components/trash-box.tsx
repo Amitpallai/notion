@@ -20,7 +20,7 @@ export const TrashBox = () => {
 
   const [search, setSearch] = useState("");
 
-  const filterDocuments = documents?.filter((document:any) => {
+  const filterDocuments = documents?.filter((document) => {
     return document.title.toLowerCase().includes(search.toLocaleLowerCase());
   });
 
@@ -79,7 +79,7 @@ export const TrashBox = () => {
         <p className="hidden last:block text-xs text-center">
           No documents found.
         </p>
-        {filterDocuments?.map((document:any, ind:any) => {
+        {filterDocuments?.map((document, ind) => {
           return (
             <div
               key={ind}

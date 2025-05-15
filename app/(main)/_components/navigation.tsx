@@ -7,7 +7,6 @@ import {
   Inbox,
   MenuIcon,
   Plus,
-  PlusCircle,
   Search,
   Settings,
   Trash,
