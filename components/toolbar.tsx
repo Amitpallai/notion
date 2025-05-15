@@ -1,99 +1,135 @@
-import { cn } from "../lib/utils";
-import { ChevronDown, ChevronRight, LucideIcon } from "lucide-react";
-import { Id } from "../convex/_generated/dataModel";
-import { Skeleton } from "./ui/skeleton";
+"use client";
 
-interface ItemProps {
-  id?: Id<"documents">;
-  documentIcon?: string;
-  active?: boolean;
-  expanded?: boolean;
-  isSearch?: boolean;
-  level?: number;
-  onExpand?: () => void;
-  label?: string;
-  onClick?: () => void;
-  icon?: LucideIcon;
-  client?: any;
+import { useCoverImage } from "../hooks/use-cover-image";
+import { Doc } from "../convex/_generated/dataModel";
+import { IconPicker } from "./icon-picker";
+import { Button } from "./ui/button";
+import { ImageIcon, Smile, X } from "lucide-react";
+import { ElementRef, useRef, useState } from "react";
+import { useMutation } from "convex/react";
+import { api } from "../convex/_generated/api";
+import TextareaAutosize from "react-textarea-autosize";
+
+interface ToolbarProps {
+  initialData: Doc<"documents">;
   preview?: boolean;
-  initialData?: any;
 }
 
-export const Toolbar = ({
-  id,
-  label,
-  icon: Icon,
-  active,
-  documentIcon,
-  isSearch,
-  level = 0,
-  onExpand,
-  expanded,
-  onClick,
-}: ItemProps) => {
-  const handleExpand = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    event.stopPropagation();
-    onExpand?.();
+export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
+  const inputRef = useRef<ElementRef<"textarea">>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [value, setValue] = useState(initialData.title);
+
+  const update = useMutation(api.documents.update);
+  const removeIcon = useMutation(api.documents.removeIcon);
+
+  const coverImage = useCoverImage();
+
+  const enableInput = () => {
+    if (preview) return;
+
+    setIsEditing(true);
+    setTimeout(() => {
+      setValue(initialData.title);
+      inputRef.current?.focus();
+    }, 0);
   };
 
-  const ChevronIcon = expanded ? ChevronDown : ChevronRight;
+  const disableInput = () => setIsEditing(false);
+
+  const onInput = (value: string) => {
+    setValue(value);
+    update({
+      id: initialData._id,
+      title: value || "Untitled",
+    });
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      disableInput();
+    }
+  };
+
+  const onIconSelect = (icon: string) => {
+    update({
+      id: initialData._id,
+      icon,
+    });
+  };
+
+  const onRemoveIcon = () => {
+    removeIcon({
+      id: initialData._id,
+    });
+  };
 
   return (
-    <div
-      onClick={onClick}
-      role="button"
-      style={{
-        paddingLeft: level ? `${(level * 12) + 12}px` : "12px"
-      }}
-      className={cn(
-        "group min-h-[27px] text-sm py-1 pr-3 w-full hover:bg-primary/5 flex items-center text-muted-foreground font-medium",
-        active && "bg-primary/5 text-primary"
-      )}
-    >
-      {!!id && (
-        <div
-          role="button"
-          className="h-full rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 mr-1"
-          onClick={handleExpand}
-        >
-          <ChevronIcon
-            className="h-4 w-4 shrink-0 text-muted-foreground/50"
-          />
+    <div className="pl-[54px] group relative">
+      {!!initialData.icon && !preview && (
+        <div className="flex items-center gap-x-2 group/icon pt-6">
+          <IconPicker onChange={onIconSelect}>
+            <p className="text-6xl hover:opacity-75 transition">
+              {initialData.icon}
+            </p>
+          </IconPicker>
+          <Button
+            onClick={onRemoveIcon}
+            className="rounded-full opacity-0 group-hover/icon:opacity-100 transition text-muted-foreground text-xs"
+            variant="outline"
+            size="icon"
+          >
+            <X className="h-4 w-4" />
+          </Button>
         </div>
       )}
-      {documentIcon ? (
-        <div className="shrink-0 mr-2 text-[18px]">
-          {documentIcon}
-        </div>
-      ) : (
-        Icon && <Icon
-          className="shrink-0 h-[18px] mr-2 text-muted-foreground"
+      {!!initialData.icon && preview && (
+        <p className="text-6xl pt-6">{initialData.icon}</p>
+      )}
+      <div className="opacity-0 group-hover:opacity-100 flex items-center gap-x-1 py-4">
+        {!initialData.icon && !preview && (
+          <IconPicker asChild onChange={onIconSelect}>
+            <Button
+              className="to-muted-foreground text-xs"
+              variant="outline"
+              size="sm"
+            >
+              <Smile className="h-4 w-4 mr-2" />
+              Add icon
+            </Button>
+          </IconPicker>
+        )}
+        {!initialData.coverImage && !preview && (
+          <Button
+            onClick={coverImage.onOpen}
+            className="text-muted-foreground"
+            variant="outline"
+            size="sm"
+          >
+            <ImageIcon className="h-4 w-4 mr-2" />
+            Add cover
+          </Button>
+        )}
+      </div>
+      {isEditing && !preview ? (
+        <TextareaAutosize
+          ref={inputRef}
+          onBlur={disableInput}
+          onKeyDown={onKeyDown}
+          value={value}
+          onChange={(e) => onInput(e.target.value)}
+          className="text-5xl bg-transparent font-bold break-words
+            outline-none text-[#3F3F3F] dark:text-[#CFCFCF] resize-none"
         />
-      )}
-      <span className="truncate">
-        {label}
-      </span>
-      {isSearch && (
-        <kbd className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
-          <span className="text-xs">⌘</span>K
-        </kbd>
+      ) : (
+        <div
+          onClick={enableInput}
+          className="pb-[11.5px] text-5xl font-bold break-words outline-none text-[#3F3F3F] dark:text-[#CFCFCF]"
+        >
+          {initialData.title}
+        </div>
       )}
     </div>
   );
 };
-
-Toolbar.Skeleton = function ItemSkeleton({ level }: { level?: number }) {
-  return (
-    <div
-      style={{
-        paddingLeft: level ? `${(level * 12) + 12}px` : "12px"
-      }}
-      className="flex gap-x-2 py-[3px]"
-    >
-      <Skeleton className="h-4 w-4" />
-      <Skeleton className="h-4 w-[30%]" />
-    </div>
-  );
-}; 

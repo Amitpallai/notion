@@ -114,7 +114,8 @@ export const Navigation = () => {
   };
 
   const handleCreate = () => {
-    const promise = create({ title: "Untitled" }).then((documentId) =>
+    const promise = create({ title: "Untitled" })
+    .then((documentId) =>
       router.push(`/documents/${documentId}`)
     );
 
@@ -130,7 +131,7 @@ export const Navigation = () => {
       <aside
         ref={sidebarRef}
         className={cn(
-          "group/sidebar h-full bg-secondary overflow-y-auto relative px-2 flex justify-between w-60 flex-col z-[10]",
+          "group/sidebar h-full bg-secondary overflow-y-auto relative flex justify-between w-60 flex-col z-[10]",
           isResetting && "transition-all ease-in-out duration-300",
           isMobile && "w-0"
         )}
@@ -149,10 +150,11 @@ export const Navigation = () => {
         <div className=" flex flex-col gap-2">
           <UserItem />
           <Item label="Search" icon={Search} isSearch onClick={search.onOpen} />
-          <Item label="Home" icon={Home} onClick={() => router.push("/documents")} />
+          <Item label="Home" icon={Home}  />
           <Item label="Inbox" icon={Inbox} />
         </div>
         <div className="mt-4 ">
+          <p className="px-4 p-2 text-sm">public</p>
           <DocumentList />
           <Item onClick={handleCreate} icon={Plus} label="Add a page" />
           <Popover>

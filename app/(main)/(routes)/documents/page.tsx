@@ -9,7 +9,6 @@ import { api } from "../../../../convex/_generated/api";
 import Image from "next/image";
 import React from "react";
 import { toast } from "sonner";
-import { AIChat } from "../../../../components/ai-chat";
 
 const DocumentsPage = () => {
   const router = useRouter();

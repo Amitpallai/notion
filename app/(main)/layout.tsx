@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 import { Navigation } from "./_components/navigation";
 import { Spinner } from "../../components/spinner";
 import { SearchCommand } from "../../components/search-command";
-import { CoverImageModal } from "../../components/modals/cover-image-modal";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, isLoading } = useConvexAuth();
@@ -22,12 +21,11 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
     return redirect("/");
   }
   return (
-    <div className="h-[100vh] flex dark:[#1F1F1F]">
+    <div className="h-[100vh] flex dark:bg-[#1F1F1F]">
       <Navigation />
       <main className="h-full flex-1 overflow-y-auto">
         <SearchCommand />
         {children}
-        <CoverImageModal />
       </main>
     </div>
   );
