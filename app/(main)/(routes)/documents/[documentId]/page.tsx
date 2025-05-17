@@ -9,13 +9,13 @@ import { api } from "../../../../../convex/_generated/api";
 import { Id } from "../../../../../convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
 
-interface DocumentIdPageProps {
+interface DocumentIdPage {
   params: {
     documentId: string;
   };
 }
 
-const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
+const DocumentIdPage = ({ params }: DocumentIdPage) => {
   const Editor = useMemo(
     () => dynamic(() => import("../../../../../components/editor"), { ssr: false }),
     [],
