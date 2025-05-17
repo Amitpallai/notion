@@ -1,15 +1,16 @@
 "use client";
 
-import { ConfirmModal } from "../../../components/modals/confirm-modal";
-import { Spinner } from "../../../components/spinner";
-import { Input } from "../../../components/ui/input";
-import { api } from "../../../convex/_generated/api";
-import { Id } from "../../../convex/_generated/dataModel";
-import { useMutation, useQuery } from "convex/react";
-import { Search, Trash, Undo } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useQuery, useMutation } from "convex/react";
+import { Search, Trash, Undo } from "lucide-react";
 import { toast } from "sonner";
+
+import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
+import { Spinner } from "@/components/spinner";
+import { Input } from "@/components/ui/input";
+import { ConfirmModal } from "@/components/modals/confirm-modal";
 
 export const TrashBox = () => {
   const router = useRouter();
@@ -20,8 +21,8 @@ export const TrashBox = () => {
 
   const [search, setSearch] = useState("");
 
-  const filterDocuments = documents?.filter((document) => {
-    return document.title.toLowerCase().includes(search.toLocaleLowerCase());
+  const filteredDocuments = documents?.filter((document) => {
+    return document.title.toLowerCase().includes(search.toLowerCase());
   });
 
   const onClick = (documentId: string) => {
@@ -30,26 +31,27 @@ export const TrashBox = () => {
 
   const onRestore = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    documentId: Id<"documents">
+    documentId: Id<"documents">,
   ) => {
     event.stopPropagation();
-
     const promise = restore({ id: documentId });
 
     toast.promise(promise, {
       loading: "Restoring note...",
       success: "Note restored!",
-      error: "Failed to restored note.",
+      error:" Failed to restore note."
     });
   };
 
-  const onRemove = (documentId: Id<"documents">) => {
+  const onRemove = (
+    documentId: Id<"documents">,
+  ) => {
     const promise = remove({ id: documentId });
 
     toast.promise(promise, {
       loading: "Deleting note...",
       success: "Note deleted!",
-      error: "Failed to delete note.",
+      error:" Failed to delete note."
     });
 
     if (params.documentId === documentId) {
@@ -64,6 +66,7 @@ export const TrashBox = () => {
       </div>
     );
   }
+
   return (
     <div className="text-sm">
       <div className="flex items-center gap-x-1 p-2">
@@ -72,43 +75,42 @@ export const TrashBox = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="h-7 px-2 focus-visible:ring-transparent bg-secondary"
-          placeholder="Filter by page title"
+          placeholder="Filter by page title..."
         />
       </div>
       <div className="mt-2 px-1 pb-1">
-        <p className="hidden last:block text-xs text-center">
+        <p className="hidden last:block text-xs text-center text-muted-foreground pb-2">
           No documents found.
         </p>
-        {filterDocuments?.map((document, ind) => {
-          return (
-            <div
-              key={ind}
-              role="button"
-              onClick={() => onClick(document._id)}
-              className="text-sm rounded-sm w-full hover:bg-primary/5 
-                flex items-center text-primary justify-between"
-            >
-              <span className="truncate pl-2 ">{document.title}</span>
-              <div className="flex items-center">
+        {filteredDocuments?.map((document) => (
+          <div
+            key={document._id}
+            role="button"
+            onClick={() => onClick(document._id)}
+            className="text-sm rounded-sm w-full hover:bg-primary/5 flex items-center text-primary justify-between"
+          >
+            <span className="truncate pl-2">
+              {document.title}
+            </span>
+            <div className="flex items-center">
+              <div
+                onClick={(e) => onRestore(e, document._id)}
+                role="button"
+                className="rounded-sm p-2 hover:bg-neutral-200 dark:hover:bg-neutral-600"
+              >
+                <Undo className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <ConfirmModal onConfirm={() => onRemove(document._id)}>
                 <div
-                  onClick={(e) => onRestore(e, document._id)}
                   role="button"
                   className="rounded-sm p-2 hover:bg-neutral-200 dark:hover:bg-neutral-600"
                 >
-                  <Undo className="h-4 w-4 to-muted-foreground" />
+                  <Trash className="h-4 w-4 text-muted-foreground" />
                 </div>
-                <ConfirmModal onConfirm={() => onRemove(document._id)}>
-                  <div
-                    role="button"
-                    className="rounded-sm p-2 hover:bg-neutral-200 dark:hover:bg-neutral-600"
-                  >
-                    <Trash className="h-4 w-4 to-muted-foreground" />
-                  </div>
-                </ConfirmModal>
-              </div>
+              </ConfirmModal>
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
     </div>
   );

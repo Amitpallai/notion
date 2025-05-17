@@ -1,22 +1,26 @@
 "use client";
 
-import {  ConvexReactClient } from "convex/react";
-import { ClerkProvider, useAuth } from "@clerk/clerk-react";
+import { ReactNode } from "react";
+import { ConvexReactClient } from "convex/react";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
-import { ThemeProvider } from "next-themes";
-import { EdgeStoreProvider } from "../../lib/edgestore";
+import { ClerkProvider, useAuth } from "@clerk/clerk-react";
 
 const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
-export const ConvexClientProdiver = ({ children }: { children: React.ReactNode }) => {
+export const ConvexClientProvider = ({
+  children
+}: {
+  children: ReactNode;
+}) => {
   return (
-    <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!}>
-      <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
-        <EdgeStoreProvider>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            {children}
-          </ThemeProvider>
-        </EdgeStoreProvider>
+    <ClerkProvider
+      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!}
+    >
+      <ConvexProviderWithClerk
+        useAuth={useAuth}
+        client={convex}
+      >
+        {children}
       </ConvexProviderWithClerk>
     </ClerkProvider>
   );
