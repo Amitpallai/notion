@@ -57,4 +57,4 @@ Follow the official Next.js deployment guide for deploying to your preferred hos
 
 ---
 
-Made with ❤️ by [Amit pallsi](https://amitpallai.vercel.app)
+Made with ❤️ by [Amit pallai](https://amitpallai.vercel.app)
