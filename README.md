@@ -1,71 +1,60 @@
-# Fullstack Notion Clone: Next.js 13, React, Convex, Tailwind 
+# Notion Clone
 
-<!-- ![Copy of Copy of Copy of Fullstack Twitter Clone (6)](https://github.com/AntonioErdeljac/notion-clone-tutorial/assets/23248726/66bcfca3-93bf-4aa4-950d-f98c020e1156)
- -->
+A modern, full-stack Notion-like note-taking and collaboration app built with Next.js, Convex, and Edge Store. This project features real-time document editing, hierarchical page organization, and a sleek, responsive UI powered by Tailwind CSS.
 
-This is a repository for Fullstack Notion Clone: Next.js 13, React, Convex, Tailwind 
+## Features
 
+- 📝 **Rich Document Editing**: Create, edit, and organize documents in a nested structure.
+- 🔍 **Powerful Search**: Quickly find documents with an integrated search command bar.
+- 📁 **File Uploads**: Upload and manage files using Edge Store.
+- 🗑️ **Trash Management**: Soft-delete and restore documents from the trash.
+- ⚡ **Real-Time Updates**: Instant updates across clients using Convex.
+- 🔒 **User Authentication**: Secure access and personalized settings.
+- 🌙 **Dark/Light Mode**: Seamless theme switching.
+- 📱 **Responsive Design**: Optimized for both desktop and mobile devices.
 
-Key Features:
+## Tech Stack
 
-- Real-time database  🔗 
-- Notion-style editor 📝 
-- Light and Dark mode 🌓
-- Infinite children documents 🌲
-- Trash can & soft delete 🗑️
-- Authentication 🔐 
-- File upload
-- File deletion
-- File replacement
-- Icons for each document (changes in real-time) 🌠
-- Expandable sidebar ➡️🔀⬅️
-- Full mobile responsiveness 📱
-- Publish your note to the web 🌐
-- Fully collapsable sidebar ↕️
-- Landing page 🛬
-- Cover image of each document 🖼️
-- Recover deleted files 🔄📄
+- [Next.js](https://nextjs.org/) (App Router)
+- [Convex](https://convex.dev/) (Database & Real-time backend)
+- [Edge Store](https://edgestore.dev/) (File storage)
+- [Tailwind CSS](https://tailwindcss.com/) (Styling)
+- [Lucide React](https://lucide.dev/) (Icons)
+- [TypeScript](https://www.typescriptlang.org/)
+
+## Getting Started
 
 ### Prerequisites
 
-**Node version 18.x.x**
+- Node.js (v18+ recommended)
+- [Convex CLI](https://docs.convex.dev/cli/install)
+- [Edge Store account](https://edgestore.dev/)
 
-### Cloning the repository
+### Installation
 
-```shell
-git clone https://github.com/AntonioErdeljac/notion-clone-tutorial.git
-```
+1. **Clone the repository:**
+   ```sh
+   git clone https://github.com/your-username/notion.git
+   cd notion
+   ```
+2. **Install dependencies:**
+   ```sh
+   npm install
+   ```
+3. **Set up environment variables:**
+   - Copy `.env.example` to `.env` and update the values accordingly.
+4. **Run the development server:**
+   ```sh
+   npm run dev
+   ```
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### Install packages
+### Deployment
 
-```shell
-npm i
-```
-
-### Setup .env file
+Follow the official Next.js deployment guide for deploying to your preferred hosting provider.
 
 
-```js
-# Deployment used by `npx convex dev`
-CONVEX_DEPLOYMENT=
-NEXT_PUBLIC_CONVEX_URL=
 
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
-CLERK_SECRET_KEY=
+---
 
-EDGE_STORE_ACCESS_KEY=
-EDGE_STORE_SECRET_KEY=
-```
-
-### Setup Convex
-
-```shell
-npx convex dev
-
-```
-
-### Start the app
-
-```shell
-npm run dev
-```
+Made with ❤️ by [Amit pallsi](https://amitpallai.vercel.app)
